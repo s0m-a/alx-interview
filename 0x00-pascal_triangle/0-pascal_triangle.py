@@ -2,14 +2,12 @@ def pascal_triangle(n):
     if n <= 0:
         return []
 
-    triangle = [[1]]
-    for row_index in range(1, n):
-        new_row = [1]
-        previous_row = triangle[row_index - 1]
-        for col_index in range(1, len(previous_row)):
-            new_element = previous_row[col_index - 1] + previous_row[col_index]
-            new_row.append(new_element)
-        new_row.append(1)
-        triangle.append(new_row)
+    triangle = []
+    for i in range(n):
+        row = [1] * (i + 1)
+        if i > 1:
+            for j in range(1, i):
+                row[j] = triangle[i - 1][j - 1] + triangle[i - 1][j]
+        triangle.append(row)
 
     return triangle
