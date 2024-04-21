@@ -4,13 +4,13 @@ Solution to lockboxes problem
 """
 
 
-def canUnlockAll(boxes):
+def can_unlock_all(boxes):
     """
     Determines if a sequence of locked boxes can be opened using available keys.
     Solution to the lockboxes problem.
     """
-    boxNum = len(boxes)
-    checked = [False] * boxNum
+    box_num = len(boxes)
+    checked = [False] * box_num
     checked[0] = True
 
     stack = [0]
@@ -18,8 +18,13 @@ def canUnlockAll(boxes):
     while stack:
         curr = stack.pop()
         for key in boxes[curr]:
-            if 0 <= key < boxNum and not checked[key]:
+            if 0 <= key < box_num and not checked[key]:
                 checked[key] = True
                 stack.append(key)
 
     return all(checked)
+
+
+
+
+
