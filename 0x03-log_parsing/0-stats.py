@@ -1,19 +1,15 @@
 #!/usr/bin/python3
-"""
-A script: Reads standard input line by line and computes metrics
-"""
-
 
 import sys
 from collections import defaultdict
 
 def print_stat(total_size, status_counts):
     """
-    Prints stat based on total file size and status code counts.
+    Prints statistics based on total file size and status code counts.
 
     Args:
         total_size (int): Total file size.
-        status_counts (dict): Dict containing counts of status codes.
+        status_counts (dict): Dictionary containing counts of status codes.
 
     Returns:
         None
@@ -22,15 +18,15 @@ def print_stat(total_size, status_counts):
     for code, count in sorted(status_counts.items()):
         print(f"{code}: {count}")
 
-def parseLine(line):
+def parseLne(line):
     """
-    Parses a single line of log and gets IP address, status code, and file size.
+    Parses a single line of log and extracts IP address, status code, and file size.
 
     Args:
-        line (str): a single line of log entry.
+        line (str): Single line of log entry.
 
     Returns:
-        tuple: Tuple containing IP address and tuple of status code and file size.
+        tuple: Tuple containing IP address (str) and tuple of status code (str) and file size (int).
     """
     parts = line.split()
     if len(parts) != 10:
@@ -48,7 +44,7 @@ def main():
     status_counts = defaultdict(int)
     try:
         for i, line in enumerate(sys.stdin, start=1):
-            ip_address, data = parseLine(line.strip())
+            ip_address, data = parseLne(line.strip())
             if data is None:
                 continue
             status_code, file_size = data
@@ -58,9 +54,7 @@ def main():
             if i % 10 == 0:
                 print_stat(total_size, status_counts)
     except KeyboardInterrupt:
-        """ 
-        Handle KeyboardInterrupt and print final statistics
-        """
+        # Handle KeyboardInterrupt and print final statistics
         print_stat(total_size, status_counts)
 
 if __name__ == "__main__":
