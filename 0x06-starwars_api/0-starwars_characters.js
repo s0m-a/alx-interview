@@ -1,20 +1,44 @@
 #!/usr/bin/node
-const util = require('util');
-const request = util.promisify(require('request'));
-const filmID = process.argv[2];
 
-async function starwarsCharacters (filmId) {
-  const endpoint = 'https://swapi-api.hbtn.io/api/films/' + filmId;
-  let response = await (await request(endpoint)).body;
-  response = JSON.parse(response);
-  const characters = response.characters;
+const request = require('request');
 
-  for (let i = 0; i < characters.length; i++) {
-    const urlCharacter = characters[i];
-    let chters = await (await request(urlCharacter)).body;
-    chters = JSON.parse(character);
-    console.log(chters.name);
-  }
+if (process.argv.length !== 3) {
+  console.error('Usage: ./0-starwars_characters.js <Movie ID>');
+  process.exit(1);
 }
 
-starwarsCharacters(filmID);
+const movieId = process.argv[2];
+const url = `https://swapi-api.hbtn.io/api/films/${movieId}/`;
+
+request(url, (error, response, body) => {
+  if (error) {
+    console.error('Error:', error);
+    return;
+  }
+
+  if (response.statusCode !== 200) {
+    console.error('Failed to retrieve movie data');
+    return;
+  }
+
+  const movie = JSON.parse(body);
+  const characters = movie.characters;
+
+  characters.forEach((characterUrl) => {
+    request(characterUrl, (charError, charResponse, charBody) => {
+      if (charError) {
+        console.error('Error:', charError);
+        return;
+      }
+
+      if (charResponse.statusCode !== 200) {
+        console.error('Failed to retrieve character data');
+        return;
+      }
+
+      const character = JSON.parse(charBody);
+      console.log(character.name);
+    });
+  });
+});
+
